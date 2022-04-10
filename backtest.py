@@ -1,11 +1,13 @@
 import pandas as pd
 from binance.client import Client
 import ta
+import sys
 
-
+date_test = sys.argv[1]
+print("date début de test : "+date_test)
 try:
 
-    klinesT = Client().get_historical_klines("BTCUSDT",Client.KLINE_INTERVAL_1HOUR, "01 January 2021")
+    klinesT = Client().get_historical_klines("BTCUSDT",Client.KLINE_INTERVAL_1HOUR, date_test)
     df = pd.DataFrame(klinesT, columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_av', 'trades', 'tb_bases_av', 'tb_quote_av', 'ignore'])
 
 
