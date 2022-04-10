@@ -2,6 +2,8 @@ import pandas as pd
 from binance.client import Client
 import ta
 import sys
+import xlsxwriter
+import algo
 
 date_test = sys.argv[1]
 print("date début du test : "+date_test)
@@ -32,31 +34,18 @@ try:
     df.index = pd.to_datetime(df.index, unit='ms')
 
     del df['timestamp']
-    print(df)
+    #print(df)
 
 
-    df['EMA12'] = ta.trend.sma_indicator(df['close'], 12)
-    df['EMA26'] = ta.trend.sma_indicator(df['close'], 26)
-    print(df)
+    #print(df)
 
-    usdt = 1000
-    btc = 0
+    #usdt = 1000
+    #btc = 0
     lastIndex = df.first_valid_index()
+    ema_fast_periode=0
+    ema_slow_periode=0
 
-    for index, row in df.iterrows():
-      if df['EMA12'][lastIndex] > df['EMA26'][lastIndex] and usdt > 10:
-       btc = usdt / df['close'][index]
-       btc = btc - 0.007 * btc
-       usdt = 0
-      #print("Buy BTC at",df['close'][index],'$ the',index)
-
-      if df['EMA12'][lastIndex] < df['EMA26'][lastIndex] and btc < 0.000001:
-       usdt = btc * df['close'][index]
-       usdt = usdt - 0.007 * usdt
-       btc = 0
-      #print("Sell BTC at",df['close'][index],'$ the',index)
-
-      lastindex = index
+    btc,usdt,df= algo.algo(df.iterrows(),df,lastIndex)
 
 
     finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
