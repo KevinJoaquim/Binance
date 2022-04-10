@@ -62,9 +62,6 @@ try:
     finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
     print("Final result",finalResult,'USDT')
 
-    finalResult = usdt + btc * df['close'].iloc[-1]
-    print("final Result",finalResult,'USDT')
-
     finalResult = usdt +  df['close'].iloc[-1]
     print("final Result",finalResult,'USDT')
 
