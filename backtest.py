@@ -4,7 +4,7 @@ import ta
 import sys
 
 date_test = sys.argv[1]
-print("date début de test : "+date_test)
+print("date début du test : "+date_test)
 try:
 
     klinesT = Client().get_historical_klines("BTCUSDT",Client.KLINE_INTERVAL_1HOUR, date_test)
@@ -48,13 +48,13 @@ try:
        btc = usdt / df['close'][index]
        btc = btc - 0.007 * btc
        usdt = 0
-      print("Buy BTC at",df['close'][index],'$ the',index)
+      #print("Buy BTC at",df['close'][index],'$ the',index)
 
       if df['EMA12'][lastIndex] < df['EMA26'][lastIndex] and btc < 0.000001:
        usdt = btc * df['close'][index]
        usdt = usdt - 0.007 * usdt
        btc = 0
-      print("Sell BTC at",df['close'][index],'$ the',index)
+      #print("Sell BTC at",df['close'][index],'$ the',index)
 
       lastindex = index
 
