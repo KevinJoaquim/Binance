@@ -1,4 +1,5 @@
-import os
+import asyncio
+import logging
 from binance.client import Client
 from binance import ThreadedWebsocketManager
 import pprint
@@ -8,7 +9,7 @@ TEST_NET = True
 
 
 # Get the BTC value in the last 24 hrs
-def btc_values_received(msg):
+async def btc_values_received(msg):
     ''' Process the btc values received in the last 24 hrs '''
 
     pprint.pprint(msg)
@@ -20,14 +21,43 @@ def btc_values_received(msg):
         btc_price['error'] = True
 
 
-def main():
-    pprint.pprint(client.get_account())
-    print(client.get_asset_balance(asset='BNB'))  # BTC, USDT, ETH
+# Buy or sell ETHUSDT when BTC reaches a particular value
+async def buy_and_sell_ETH_at_BTC():
+    while True:
+        # error check to make sure WebSocket is working
+        if btc_price['error']:
+            # stop and restart socket (cleanup)
+            twm.stop()
+            sleep(2)
+            twm.start()
+            btc_price['error'] = False
+        else:
+            if 1000 < btc_price['BTCUSDT'] < 40000:  # bitcoin price
+                try:
+                    print("Buying when BTCUSDTprice:", btc_price['BTCUSDT'])
+                    order = client.order_market_buy(symbol='ETHUSDT', quantity=1)
+                    pprint.pprint(order)
+                    break
+                except Exception as e:
+                    print(e)
+                    break
+            else:
+                try:
+                    print("Selling when BTCUSDT price:", btc_price['BTCUSDT'])
+                    order = client.order_market_sell(symbol='ETHUSDT', quantity=1)
+                    pprint.pprint(order)
+                    break
+                except Exception as e:
+                    print(e)
+                    break
+            sleep(0.1)
 
-    # get latest price from Binance API
+
+async def main():
+    pprint.pprint(client.get_account())
+    print(client.get_asset_balance(asset='BNB'))
     eth_price = client.get_symbol_ticker(symbol="ETHUSDT")
     print(eth_price)
-
     # Start the websocket manager and register
     # callback for the bitcoin price
     twm.start()
@@ -39,6 +69,10 @@ def main():
 
 
 if __name__ == "__main__":
+
+    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
+
     if TEST_NET:
         # passkey (saved in bashrc for linux)
         api_key = 'bAQbSugYEBgYVBu89joIflmRPRovcThZK29PqRUjEOQ2LaRXOPMPhxCAoOCkRWGI'
@@ -52,6 +86,6 @@ if __name__ == "__main__":
     # Add btc price and instantiate ThreadedWebsocketManager()
     btc_price = {'BTCUSDT': None, 'error': False}
     twm = ThreadedWebsocketManager()
-    main()
 
-    main()
+    loop = asyncio.get_event_loop()
+    asyncio.run(main(), debug=True)
