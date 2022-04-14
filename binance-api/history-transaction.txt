@@ -1,0 +1,1 @@
+2022-04-14 12:57:29.889000 ; SELL , {'symbol': 'ETHUSDT', 'orderId': 2117156, 'orderListId': -1, 'clientOrderId': 'w7YtDkLs1eUxmXErx3GhiW', 'transactTime': 1649941049889, 'price': '0.00000000', 'origQty': '1.00000000', 'executedQty': '0.00000000', 'cummulativeQuoteQty': '0.00000000', 'status': 'EXPIRED', 'timeInForce': 'GTC', 'type': 'MARKET', 'side': 'SELL', 'fills': []}
