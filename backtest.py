@@ -9,7 +9,7 @@ try:
 
     ## VARIABLE A MODIFIER
 
-    date_test_depart = "01 January 2021"
+    date_test_depart = "01 January 2017"
     kline_interval = Client.KLINE_INTERVAL_1HOUR
     symbol = "BTCUSDT"
     # Courbe EMA
