@@ -9,7 +9,7 @@ try:
 
     ## VARIABLE A MODIFIER
 
-    date_test_depart = "01 January 2022"
+    date_test_depart = "01 January 2021"
     kline_interval = Client.KLINE_INTERVAL_1HOUR
     symbol = "BTCUSDT"
     # Courbe EMA
@@ -57,7 +57,7 @@ try:
 
     btc,usdt,df= ema.ema(df.iterrows(),df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_slow_periode)
 
-
+    print("final bitcoin", btc)
     finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
     print("Final result",finalResult,'USDT')
 

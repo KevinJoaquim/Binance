@@ -15,7 +15,7 @@ def ema(dfIterrows,df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_
           print("Buy BTC at",df['close'][index],'$ the',index," BTC account = ",btc)
 
 
-      if df[ema_fast][lastIndex] < df[ema_slow][lastIndex] and btc < 0.000001:
+      if df[ema_fast][lastIndex] < df[ema_slow][lastIndex] and btc > 0.000001:
           usdt = btc * df['close'][index]
           usdt = usdt - 0.007 * usdt
           btc = 0
