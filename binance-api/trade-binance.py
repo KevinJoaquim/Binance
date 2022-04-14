@@ -1,4 +1,6 @@
 import asyncio
+import pandas as pd
+import xlsxwriter
 import logging
 from binance.client import Client
 from binance import ThreadedWebsocketManager
@@ -8,21 +10,23 @@ from time import sleep
 TEST_NET = True
 
 
+
 # Get the BTC value in the last 24 hrs
-async def btc_values_received(msg):
+def btc_values_received(msg):
     ''' Process the btc values received in the last 24 hrs '''
 
-    pprint.pprint(msg)
-
     if msg['e'] != 'error':
-        print(msg['e'])
+        print(msg['e'] + "/////////////////////////////////////////////////////////// price BTCUSDT = " + str(float(msg['c'])))
         btc_price['BTCUSDT'] = float(msg['c'])
+
+
     else:
         btc_price['error'] = True
 
 
 # Buy or sell ETHUSDT when BTC reaches a particular value
-async def buy_and_sell_ETH_at_BTC():
+def buy_and_sell_ETH_at_BTC():
+
     while True:
         # error check to make sure WebSocket is working
         if btc_price['error']:
@@ -37,6 +41,16 @@ async def buy_and_sell_ETH_at_BTC():
                     print("Buying when BTCUSDTprice:", btc_price['BTCUSDT'])
                     order = client.order_market_buy(symbol='ETHUSDT', quantity=1)
                     pprint.pprint(order)
+                    f = open("history-transaction.txt", "a")
+                    timestamp = pd.to_datetime(order["transactTime"], unit='ms')
+
+                    f.write(timestamp + " ; "+order["side"]+ ' , ' + str(order) + '\n')
+                    f.close()
+
+
+#curl -X POST --data-urlencode "payload={\"channel\": \"#trade\", \"username\": \"webhookbot\", \"text\": \"Ceci est publié dans #trade et provient d'un robot nommé webhookbot.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+
+
                     break
                 except Exception as e:
                     print(e)
@@ -46,6 +60,12 @@ async def buy_and_sell_ETH_at_BTC():
                     print("Selling when BTCUSDT price:", btc_price['BTCUSDT'])
                     order = client.order_market_sell(symbol='ETHUSDT', quantity=1)
                     pprint.pprint(order)
+
+                    f = open("history-transaction.txt", "a")
+                    timestamp = pd.to_datetime(order["transactTime"], unit='ms')
+
+                    f.write(str(timestamp) + " ; "+order["side"] + ' , ' + str(order) + '\n')
+                    f.close()
                     break
                 except Exception as e:
                     print(e)
@@ -53,25 +73,31 @@ async def buy_and_sell_ETH_at_BTC():
             sleep(0.1)
 
 
-async def main():
+
+def main():
+
+
     pprint.pprint(client.get_account())
-    print(client.get_asset_balance(asset='BNB'))
+    #print(client.get_asset_balance(asset='BNB'))
     eth_price = client.get_symbol_ticker(symbol="ETHUSDT")
-    print(eth_price)
+    #print(eth_price)
     # Start the websocket manager and register
     # callback for the bitcoin price
     twm.start()
-    twm.start_symbol_ticker_socket(callback=btc_values_received,
-                                   symbol='BTCUSDT')
-    # To keep the ThreadedWebsocketManager running using join()
-    # to join it to the main thread.
-    twm.join()
+    twm.start_symbol_ticker_socket(callback=btc_values_received, symbol='BTCUSDT')
+    # wait here to receive some btc value initially through websocket callback
+    while not btc_price['BTCUSDT']:
+        sleep(0.1)
+    # call buy ETH function with a while loop to keep a track on btc price
+    buy_and_sell_ETH_at_BTC()
+    #twm.join() # to stop main thread exit.
+    #twm.stop()
 
 
 if __name__ == "__main__":
 
-    logging.basicConfig(level=logging.DEBUG)
-    logging.getLogger("asyncio").setLevel(logging.WARNING)
+    logging.basicConfig(level=logging.INFO)
+    #logging.getLogger("asyncio").setLevel(logging.WARNING)
 
     if TEST_NET:
         # passkey (saved in bashrc for linux)
@@ -87,5 +113,6 @@ if __name__ == "__main__":
     btc_price = {'BTCUSDT': None, 'error': False}
     twm = ThreadedWebsocketManager()
 
-    loop = asyncio.get_event_loop()
-    asyncio.run(main(), debug=True)
+    #loop = asyncio.get_event_loop()
+    #asyncio.run(main(), debug=True)
+    main()
