@@ -16,10 +16,13 @@ def excel(my_action):
     # columns are zero indexed.
     row = 0
     worksheet.write(row, 0, "timestamp close")
-    worksheet.write(row, 0 + 1, "values close")
-    worksheet.write(row, 0 + 2, "btc")
-    worksheet.write(row, 0 + 3, "usdt")
-    worksheet.write(row, 0 + 4, "Position")
+    worksheet.write(row, 1, "values close")
+    worksheet.write(row, 2, "btc")
+    worksheet.write(row, 3, "usdt")
+    worksheet.write(row, 4, "Position")
+    worksheet.write(row, 10, "usdt_stoploss")
+    worksheet.write(row, 11, "btc_position")
+    worksheet.write(row, 12, "low")
 
     col = 0
     row = 1
@@ -30,6 +33,11 @@ def excel(my_action):
         worksheet.write(row, col + 2, list_action[2])
         worksheet.write(row, col + 3, list_action[3])
         worksheet.write(row, col + 4, list_action[4])
+
+
+        worksheet.write(row, col + 10, list_action[5])
+        worksheet.write(row, col + 11, list_action[6])
+        worksheet.write(row, col + 12, list_action[7])
         row += 1
 
     workbook.close()

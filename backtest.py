@@ -13,11 +13,16 @@ try:
     kline_interval = Client.KLINE_INTERVAL_1HOUR
     symbol = "BTCUSDT"
     # Courbe EMA
-    ema_fast = 'EMA12'
-    ema_slow = 'EMA32'
-    ema_fast_periode=12
-    ema_slow_periode=32
+    ema_fast = 'EMA100'
+    ema_slow = 'EMA600'
+    ema_fast_periode = 100
+    ema_slow_periode = 600
 
+    #stop_loss
+    stop_loss_active = True
+    stop_loss_value = 0.90
+
+    #capital
     usdt = 1000
     btc = 0
 
@@ -55,11 +60,11 @@ try:
 
     lastIndex = df.first_valid_index()
 
-    btc,usdt,df= ema.ema(df.iterrows(),df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_slow_periode)
+    btc,usdt,df= ema.ema(df.iterrows(),df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_slow_periode,stop_loss_active,stop_loss_value)
 
-    print("final bitcoin", btc)
-    finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
-    print("Final result",finalResult,'USDT')
+    #print("final bitcoin", btc)
+    #finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
+    #print("Final result",finalResult,'USDT')
 
 
 except Exception as e:
