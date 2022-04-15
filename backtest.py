@@ -20,7 +20,7 @@ try:
 
     #stop_loss
     stop_loss_active = True
-    stop_loss_value = 0.90
+    stop_loss_value = 0.95
 
     #capital
     usdt = 1000
@@ -31,6 +31,10 @@ try:
     print( "ema_fast_periode => "+ str(ema_fast_periode))
     print( "ema_slow => "+ ema_slow)
     print( "ema_slow_periode => "+ str(ema_slow_periode))
+    print( "stop loss actif  => "+ str(stop_loss_active))
+    print( "stop loss value  => "+ str(stop_loss_value))
+    print( "capital usdt  => "+ str(usdt))
+    print( "capital btc  => "+ str(btc))
 
 
 ## Import, define Client and download data
