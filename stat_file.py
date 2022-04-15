@@ -27,9 +27,9 @@ def excel(my_action):
     worksheet.write(row, 3, "btc",cell_format)
     worksheet.write(row, 4, "usdt",cell_format)
     worksheet.write(row, 5, "Position",cell_format)
-    worksheet.write(row, 10, "usdt_stoploss",cell_format)
-    worksheet.write(row, 11, "btc_position",cell_format)
-    worksheet.write(row, 12, "low",cell_format)
+    worksheet.write(row, 11, "usdt_stoploss",cell_format)
+    worksheet.write(row, 12, "btc_position",cell_format)
+    worksheet.write(row, 13, "low",cell_format)
 
     col = 1
     row = 1
@@ -44,9 +44,9 @@ def excel(my_action):
         worksheet.write(row, col + 4, list_action[4])
 
 
-        worksheet.write(row, col + 10, list_action[6])
-        worksheet.write(row, col + 11, list_action[7])
-        worksheet.write(row, col + 12, list_action[8])
+        worksheet.write(row, col + 10, list_action[5])
+        worksheet.write(row, col + 11, list_action[6])
+        worksheet.write(row, col + 12, list_action[7])
         row += 1
 
     # Charts are independent of worksheets
