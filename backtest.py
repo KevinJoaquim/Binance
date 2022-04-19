@@ -1,15 +1,12 @@
 import pandas as pd
 from binance.client import Client
-import ta
-import sys
-import xlsxwriter
 import ema
 
 try:
 
     ## VARIABLE A MODIFIER
 
-    date_test_depart = "01 January 2017"
+    date_test_depart = "01 January 2020"
     kline_interval = Client.KLINE_INTERVAL_1HOUR
     symbol = "BTCUSDT"
     # Courbe EMA
@@ -19,7 +16,6 @@ try:
     ema_slow_periode = 600
 
     #stop_loss
-    stop_loss_active = True
     stop_loss_value = 0.95
 
     #capital
@@ -31,7 +27,6 @@ try:
     print( "ema_fast_periode => "+ str(ema_fast_periode))
     print( "ema_slow => "+ ema_slow)
     print( "ema_slow_periode => "+ str(ema_slow_periode))
-    print( "stop loss actif  => "+ str(stop_loss_active))
     print( "stop loss value  => "+ str(stop_loss_value))
     print( "capital usdt  => "+ str(usdt))
     print( "capital btc  => "+ str(btc))
@@ -40,6 +35,7 @@ try:
 ## Import, define Client and download data
     klinesT = Client().get_historical_klines(symbol,kline_interval, date_test_depart)
     df = pd.DataFrame(klinesT, columns = ['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_av', 'trades', 'tb_bases_av', 'tb_quote_av', 'ignore'])
+
 
     ## Clean Dataset
 
@@ -64,7 +60,7 @@ try:
 
     lastIndex = df.first_valid_index()
 
-    btc,usdt,df= ema.ema(df.iterrows(),df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_slow_periode,stop_loss_active,stop_loss_value)
+    btc,usdt,df= ema.ema(df.iterrows(),df,lastIndex,btc,usdt,ema_fast,ema_slow,ema_fast_periode,ema_slow_periode,stop_loss_value)
 
     #print("final bitcoin", btc)
     #finalResult = btc + usdt * int(float(df['close'].iloc[-1]))
